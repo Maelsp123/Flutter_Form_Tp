@@ -1,4 +1,5 @@
 import 'package:app_test/models/produits.dart';
+import 'package:app_test/pages/details_produits.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -142,7 +143,13 @@ class _MyHomePageState extends State<MyHomePage> {
                       subtitle: Text(produit.description),
                       trailing: Text('\$${produit.prix.toStringAsFixed(2)}'),
                       onTap: () {
-                        // Handle product tap
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                DetailsProduits(produit: produit),
+                          ),
+                        );
                       },
                     ),
                   );
@@ -180,7 +187,15 @@ class _MyHomePageState extends State<MyHomePage> {
                 '$_counter',
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
-              Icon(Icons.app_blocking_outlined, size: 50, color: Colors.red),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Icon(
+                  Icons.add_road_rounded,
+                  size: 50,
+                  color: Colors.red,
+                ),
+              ),
+              SizedBox(height: 200, child: Container(color: Colors.black)),
               Image.asset(
                 'assets/images/hello_world.png',
                 width: 200,
