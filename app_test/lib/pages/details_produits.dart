@@ -25,7 +25,7 @@ class DetailsProduits extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8.0),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
+                        color: Colors.black.withValues(alpha: 0.2),
                         blurRadius: 4.0,
                         offset: const Offset(0, 2),
                       ),
@@ -37,7 +37,7 @@ class DetailsProduits extends StatelessWidget {
                   bottom: 0,
                   child: Container(
                     width: 200,
-                    color: Colors.black.withOpacity(0.5),
+                    color: Colors.black.withValues(alpha: 0.5),
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       produit.nom,
