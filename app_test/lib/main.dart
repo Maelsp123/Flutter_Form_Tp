@@ -58,6 +58,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  Color? couleur_Tuile = Colors.grey[200];
   List<Produit> produits = [
     Produit(
       nom: 'Baskets',
@@ -79,6 +80,15 @@ class _MyHomePageState extends State<MyHomePage> {
     ),
   ];
 
+  void _changeTileColor() {
+    setState(() {
+      couleur_Tuile = couleur_Tuile == Colors.grey[200]
+          ? Colors.blue
+          : Colors.grey[200];
+      // Change the color to blue
+    });
+  }
+
   void _incrementCounter() {
     setState(() {
       // This call to setState tells the Flutter framework that something has
@@ -86,7 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
       // so that the display can reflect the updated values. If we changed
       // _counter without calling setState(), then the build method would not be
       // called again, and so nothing would appear to happen.
-      _counter--;
+      _counter++;
     });
   }
 
@@ -129,6 +139,33 @@ class _MyHomePageState extends State<MyHomePage> {
             // action in the IDE, or press "p" in the console), to see the
             // wireframe for each widget.
             children: [
+              Container(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        // Handle button 1 press
+                        _changeTileColor();
+                      },
+                      child: const Text('Button 1'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        // Handle button 2 press
+                      },
+                      child: const Text('Button 2'),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        // Handle button 3 press
+                      },
+                      icon: const Icon(Icons.add),
+                    ),
+                  ],
+                ),
+              ),
               ListView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
@@ -138,6 +175,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   return Card(
                     margin: const EdgeInsets.all(8.0),
                     child: ListTile(
+                      tileColor: couleur_Tuile,
                       leading: Image.asset(produit.image),
                       title: Text(produit.nom),
                       subtitle: Text(produit.description),
