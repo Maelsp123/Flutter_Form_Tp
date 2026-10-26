@@ -1,300 +1,230 @@
-import 'package:app_test/models/produits.dart';
-import 'package:app_test/pages/details_produits.dart';
+import 'package:app_test/components/contact_affiche.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const ContactsApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class Contact {
+  final String nom;
+  final String email;
 
-  // This widget is the root of your application.
+  const Contact({required this.nom, required this.email});
+}
+
+class ContactsApp extends StatelessWidget {
+  const ContactsApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      // debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'Mes contacts',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: .fromSeed(seedColor: Colors.green),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'HOBIKI Network Security'),
+      home: const ContactsPage(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+class ContactsPage extends StatefulWidget {
+  const ContactsPage({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<ContactsPage> createState() => _ContactsPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-  Color? couleur_Tuile = Colors.grey[200];
-  List<Produit> produits = [
-    Produit(
-      nom: 'Baskets',
-      description: 'Nike',
-      prix: 10.99,
-      image: 'assets/images/baskets.png',
-    ),
-    Produit(
-      nom: 'Burger',
-      description: 'Viande de Boeuf',
-      prix: 19.99,
-      image: 'assets/images/burger.png',
-    ),
-    Produit(
-      nom: 'Ordinateur',
-      description: 'Windows 10',
-      prix: 5.99,
-      image: 'assets/images/ordinateur.png',
-    ),
-  ];
+class _ContactsPageState extends State<ContactsPage> {
+  final List<Contact> _contacts = [];
 
-  void _changeTileColor() {
+  Future<void> _ajouterContact() async {
+    final contact = await Navigator.push<Contact>(
+      context,
+      MaterialPageRoute(builder: (context) => const ContactFormPage()),
+    );
+
+    if (!mounted || contact == null) return;
+
     setState(() {
-      couleur_Tuile = couleur_Tuile == Colors.grey[200]
-          ? Colors.blue
-          : Colors.grey[200];
-      // Change the color to blue
+      _contacts.add(contact);
     });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Contact ajouté avec succès.')),
+    );
   }
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+  void _ouvrirDetail(Contact contact) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ContactDetailPage(contact: contact),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(
-        leading: Icon(Icons.security_sharp),
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: SingleChildScrollView(
-        child: Center(
-          // Center is a layout widget. It takes a single child and positions it
-          // in the middle of the parent.
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            // Column is also a layout widget. It takes a list of children and
-            // arranges them vertically. By default, it sizes itself to fit its
-            // children horizontally, and tries to be as tall as its parent.
-            //
-            // Column has various properties to control how it sizes itself and
-            // how it positions its children. Here we use mainAxisAlignment to
-            // center the children vertically; the main axis here is the vertical
-            // axis because Columns are vertical (the cross axis would be
-            // horizontal).
-            //
-            // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-            // action in the IDE, or press "p" in the console), to see the
-            // wireframe for each widget.
-            children: [
-              Container(
-                padding: const EdgeInsets.all(16.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        // Handle button 1 press
-                        _changeTileColor();
-                      },
-                      child: const Text('Button 1'),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        // Handle button 2 press
-                      },
-                      child: const Text('Button 2'),
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        // Handle button 3 press
-                      },
-                      icon: const Icon(Icons.add),
-                    ),
-                  ],
-                ),
-              ),
-              ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: produits.length,
-                itemBuilder: (context, index) {
-                  final produit = produits[index];
-                  return Card(
-                    margin: const EdgeInsets.all(8.0),
-                    child: ListTile(
-                      tileColor: couleur_Tuile,
-                      leading: Image.asset(produit.image),
-                      title: Text(produit.nom),
-                      subtitle: Text(produit.description),
-                      trailing: Text('\$${produit.prix.toStringAsFixed(2)}'),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                DetailsProduits(produit: produit),
-                          ),
-                        );
-                      },
-                    ),
-                  );
-                },
-              ),
-              GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 12,
-                  mainAxisSpacing: 12,
-                ),
-                itemCount: produits.length,
-                itemBuilder: (context, index) {
-                  final produit = produits[index];
+      appBar: AppBar(title: const Text('Mes contacts')),
+      body: _contacts.isEmpty
+          ? const Center(
+              child: Text('Aucun contact. Ajoutez votre premier contact.'),
+            )
+          : ListView.builder(
+              itemCount: _contacts.length,
+              itemBuilder: (context, index) {
+                final contact = _contacts[index];
 
-                  return Card(
-                    margin: const EdgeInsets.all(8.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(produit.image, width: 100, height: 100),
-                        SizedBox(height: 8.0),
-                        Text(produit.nom),
-                        Text(produit.description),
-                        Text('\$${produit.prix.toStringAsFixed(2)}'),
-                      ],
-                    ),
-                  );
+                return ContactAffiche(contact: contact, onTap: _ouvrirDetail);
+              },
+            ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _ajouterContact,
+        tooltip: 'Ajouter un contact',
+        child: const Icon(Icons.add),
+      ),
+    );
+  }
+}
+
+class ContactFormPage extends StatefulWidget {
+  const ContactFormPage({super.key});
+
+  @override
+  State<ContactFormPage> createState() => _ContactFormPageState();
+}
+
+class _ContactFormPageState extends State<ContactFormPage> {
+  final _formKey = GlobalKey<FormState>();
+  final _nomController = TextEditingController();
+  final _emailController = TextEditingController();
+
+  @override
+  void dispose() {
+    _nomController.dispose();
+    _emailController.dispose();
+    super.dispose();
+  }
+
+  void _enregistrer() {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Opération réussie.')));
+
+    final contact = Contact(
+      nom: _nomController.text.trim(),
+      email: _emailController.text.trim(),
+    );
+
+    Navigator.pop(context, contact);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Ajouter un contact')),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              TextFormField(
+                controller: _nomController,
+                textCapitalization: TextCapitalization.words,
+                decoration: const InputDecoration(
+                  labelText: 'Nom complet',
+                  hintText: 'Ex. Awa Traoré',
+                  prefixIcon: Icon(Icons.person),
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) {
+                  final nom = value?.trim() ?? '';
+
+                  if (nom.isEmpty) {
+                    return 'Veuillez saisir le nom.';
+                  }
+
+                  if (nom.length < 2) {
+                    return 'Le nom doit contenir au moins 2 caractères.';
+                  }
+
+                  return null;
                 },
               ),
-              const Text('Nb attaques '),
-              Text(
-                '$_counter',
-                style: Theme.of(context).textTheme.headlineMedium,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Icon(
-                  Icons.add_road_rounded,
-                  size: 50,
-                  color: Colors.red,
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _emailController,
+                keyboardType: TextInputType.emailAddress,
+                decoration: const InputDecoration(
+                  labelText: 'Adresse e-mail',
+                  hintText: 'awa@example.com',
+                  prefixIcon: Icon(Icons.email),
+                  border: OutlineInputBorder(),
                 ),
+                validator: (value) {
+                  final email = value?.trim() ?? '';
+
+                  if (email.isEmpty) {
+                    return 'Veuillez saisir l’adresse e-mail.';
+                  }
+
+                  final emailPattern = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
+
+                  if (!emailPattern.hasMatch(email)) {
+                    return 'Veuillez saisir un e-mail valide.';
+                  }
+
+                  return null;
+                },
               ),
-              SizedBox(height: 200, child: Container(color: Colors.black)),
-              Image.asset(
-                'assets/images/hello_world.png',
-                width: 200,
-                height: 100,
-              ),
-              Container(
-                padding: const EdgeInsets.only(left: 20, top: 130),
-                width: 210,
-                height: 100,
-                color: Colors.deepOrangeAccent,
-                child: Text(
-                  "Orange",
-                  style: TextStyle(
-                    fontSize: 50,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              Card(
-                child: ListTile(
-                  leading: Icon(Icons.person),
-                  title: Text('Ouedraogo'),
-                  subtitle: Text('Gerrard'),
-                  trailing: Icon(Icons.arrow_forward),
-                  onTap: () {
-                    // Handle card tap
-                  },
+              const SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: _enregistrer,
+                  icon: const Icon(Icons.save),
+                  label: const Text('Enregistrer le contact'),
                 ),
               ),
             ],
           ),
         ),
       ),
+    );
+  }
+}
 
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
-      bottomNavigationBar: BottomAppBar(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+class ContactDetailPage extends StatelessWidget {
+  final Contact contact;
+
+  const ContactDetailPage({super.key, required this.contact});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Détail du contact')),
+      body: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            IconButton(
-              icon: const Icon(Icons.home),
-              onPressed: () {
-                // Handle home button press
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.search),
-              onPressed: () {
-                // Handle search button press
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.settings),
-              onPressed: () {
-                // Handle settings button press
-              },
+            const CircleAvatar(radius: 32, child: Icon(Icons.person, size: 32)),
+            const SizedBox(height: 24),
+            Text(contact.nom, style: Theme.of(context).textTheme.headlineSmall),
+            const SizedBox(height: 8),
+            Text(contact.email),
+            const SizedBox(height: 24),
+            OutlinedButton.icon(
+              onPressed: () => Navigator.pop(context),
+              icon: const Icon(Icons.arrow_back),
+              label: const Text('Retour à la liste'),
             ),
           ],
         ),
