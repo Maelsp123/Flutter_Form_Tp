@@ -1,5 +1,5 @@
-import 'package:app_test/main.dart';
 import 'package:flutter/material.dart';
+import 'package:app_test/models/contact.dart';
 
 class ContactAffiche extends StatelessWidget {
   final Contact contact;
